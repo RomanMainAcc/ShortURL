@@ -1,2 +1,4 @@
 test-main.http
 .env
+venv
+.idea

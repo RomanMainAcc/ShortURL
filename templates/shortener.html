@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block head %}
+  <script>
+    const shortenerURL = async () => {
+      const searchInputValue = document.getElementById("create_short_url").value;
+      try {
+            const encodedValue = encodeURIComponent(searchInputValue);
+            const response = await fetch(`/api/create-short-link?link=${encodedValue}`, {
+            method: 'POST'
+          });
+        if (response.ok) {
+          const shortLink = await response.text();
+          const cleanedShortLink = encodeURIComponent(shortLink.slice(1, -1));
+          const reportURL = `records/${cleanedShortLink}`;
+          window.location.href = reportURL;
+        } else {
+          console.error('Failed to create short link');
+        }
+      } catch (error) {
+        console.error('Error creating short link:', error);
+      }
+    }
+  </script>
+{%  endblock %}
+
+{% block content %}
+  <div class="d-flex justify-content-center ">
+    <div class="card p-4">
+      <h2 class="text-center mb-4">Paste the URL to be shortened</h2>
+      <div class="mb-3">
+        <input id="create_short_url" type="text" class="form-control" placeholder="Enter URL">
+      </div>
+      <button onclick="shortenerURL()" class="btn btn-primary btn-block">Shorten URL</button>
+      <a class="btn btn-secondary mt-2" href="/records/">Show all records</a>
+    </div>
+  </div>
+{%  endblock %}

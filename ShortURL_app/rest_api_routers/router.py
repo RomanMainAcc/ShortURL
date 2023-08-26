@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from ShortURL_app.core.models import models
-from ShortURL_app.core.schemes.link_schemes import Link
+from ShortURL_app.core.schemas.link_schemas import Link
 from ShortURL_app.core.database.database import get_db
 
 router = APIRouter(

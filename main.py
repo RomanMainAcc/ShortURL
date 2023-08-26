@@ -35,7 +35,7 @@ app.include_router(router_api)
 
 
 # @app.post("/create-short-link")
-# def create_short_link(link: str, db: Session = Depends(get_db)) -> str:
+# def create_short_link(link: link, db: Session = Depends(get_db)) -> str:
 #     record = db.query(models.LinkTable).filter_by(link=link).first()
 #
 #     if record:

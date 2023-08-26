@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 import models
+from ShortURL_app.core.schemes.link_schemes import Link
 from database import get_db
 
 router = APIRouter(
@@ -11,10 +12,10 @@ router = APIRouter(
 )
 
 
-@router.post("/create-short-link")
-def create_short_link(link: str, db: Session = Depends(get_db)) -> str:
-    record = db.query(models.LinkTable).filter_by(link=link).first()
-    # print(link)
+@router.post("/create-short-link", response_model=str)
+def create_short_link(link: Link, db: Session = Depends(get_db)):
+    link_str = str(link.link)
+    record = db.query(models.LinkTable).filter_by(link=link_str).first()
     if record:
         short_link = record.short_link
     else:
@@ -24,7 +25,7 @@ def create_short_link(link: str, db: Session = Depends(get_db)) -> str:
         while db.query(models.LinkTable).filter_by(short_link=short_link).first():
             short_link = shortuuid.uuid()[:8]
 
-        db_link = models.LinkTable(link=link, short_link=short_link)
+        db_link = models.LinkTable(link=link_str, short_link=short_link)
 
         db.add(db_link)
         db.commit()

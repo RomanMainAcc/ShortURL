@@ -5,18 +5,28 @@
     const shortenerURL = async () => {
       const searchInputValue = document.getElementById("create_short_url").value;
       try {
-            const encodedValue = encodeURIComponent(searchInputValue);
-            const response = await fetch(`/api/create-short-link?link=${encodedValue}`, {
-            method: 'POST'
-          });
+        const response = await fetch(
+          '/api/create-short-link',
+          {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ link: searchInputValue })
+          }
+        );
+
         if (response.ok) {
-          const shortLink = await response.text();
-          const cleanedShortLink = encodeURIComponent(shortLink.slice(1, -1));
-          const reportURL = `records/${cleanedShortLink}`;
-          window.location.href = reportURL;
-        } else {
-          console.error('Failed to create short link');
-        }
+    const shortLink = await response.text();
+    const cleanedShortLink = encodeURIComponent(shortLink.slice(1, -1));
+    const reportURL = `records/${cleanedShortLink}`;
+    window.location.href = reportURL;
+}else {
+    const errorData = await response.json();  // Parse error response as JSON
+    let errorMessage = errorData.error;       // Get the error message
+    if (!errorMessage) {
+        errorMessage = "This object may not be processable. For example, https://example.com/";
+    }
+    document.getElementById("error-message").innerText = errorMessage;  // Set the error message in the element
+}
       } catch (error) {
         console.error('Error creating short link:', error);
       }
@@ -33,6 +43,7 @@
       </div>
       <button onclick="shortenerURL()" class="btn btn-primary btn-block">Shorten URL</button>
       <a class="btn btn-secondary mt-2" href="/records/">Show all records</a>
+      <p id="error-message" class="text-danger mt-2"></p>  <!-- Element to display error message -->
     </div>
   </div>
 {%  endblock %}

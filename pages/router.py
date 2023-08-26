@@ -32,6 +32,6 @@ def get_report_page(short_link: str, request: Request, db: Session = Depends(get
 
 
 @router.get("/records")
-def get_shortener_page(request: Request, db: Session = Depends(get_db)):
+def get_records_page(request: Request, db: Session = Depends(get_db)):
     records = db.query(models.LinkTable).all()
     return templates.TemplateResponse("records.html", {"request": request, "records": records})

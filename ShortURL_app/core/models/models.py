@@ -1,9 +1,8 @@
 from datetime import datetime
 
-from sqlalchemy import MetaData, Column, Integer, String, TIMESTAMP, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, TIMESTAMP
 
-from database import Base
+from ShortURL_app.core.database.database import Base
 
 # from pydantic import HttpUrl as PydanticHttpUrl
 #

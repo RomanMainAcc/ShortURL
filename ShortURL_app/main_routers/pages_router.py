@@ -1,29 +1,30 @@
 from fastapi import APIRouter, Request, Depends, HTTPException
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
-import models
-from database import get_db
+from ShortURL_app.core.models import models
+from ShortURL_app.core.database.database import get_db
 
 router = APIRouter(
     prefix="",
     tags=["Pages"]
 )
 
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="ShortURL_app/core/templates")
 
 
-@router.get("/base")
+@router.get("/base", response_class=HTMLResponse)
 def get_base_page(request: Request):
     return templates.TemplateResponse("base.html", {"request": request})
 
 
-@router.get("/")
+@router.get("/", response_class=HTMLResponse)
 def get_shortener_page(request: Request):
     return templates.TemplateResponse("shortener.html", {"request": request})
 
 
-@router.get("/records/{short_link}")
+@router.get("/records/{short_link}", response_class=HTMLResponse)
 def get_report_page(short_link: str, request: Request, db: Session = Depends(get_db)):
     record = db.query(models.LinkTable).filter_by(short_link=short_link).first()
     if not record:
@@ -31,7 +32,7 @@ def get_report_page(short_link: str, request: Request, db: Session = Depends(get
     return templates.TemplateResponse("report.html", {"request": request, "record": record})
 
 
-@router.get("/records")
+@router.get("/records", response_class=HTMLResponse)
 def get_records_page(request: Request, db: Session = Depends(get_db)):
     records = db.query(models.LinkTable).all()
     return templates.TemplateResponse("records.html", {"request": request, "records": records})

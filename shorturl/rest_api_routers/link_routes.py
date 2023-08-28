@@ -2,9 +2,9 @@ import shortuuid
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from ShortURL_app.core.models import models
-from ShortURL_app.core.schemas.link_schemas import Link
-from ShortURL_app.core.database.database import get_db
+from shorturl.core.models import models
+from shorturl.core.schemas.link_schemas import Link
+from shorturl.core.database.database import get_db
 
 router = APIRouter(
     prefix="/api",

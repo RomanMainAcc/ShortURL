@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlalchemy import Column, Integer, String, TIMESTAMP
 
-from ShortURL_app.core.database.database import Base
+from shorturl.core.database.database import Base
 
 # from pydantic import HttpUrl as PydanticHttpUrl
 #

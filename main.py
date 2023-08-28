@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 
-from ShortURL_app.main_routers.pages_router import router as router_pages
-from ShortURL_app.rest_api_routers.router import router as router_api
-from ShortURL_app.main_routers.redirect_router import router as redirect_router
+from shorturl.main_routers.pages_router import router as router_pages
+from shorturl.rest_api_routers.link_routes import router as router_api
+from shorturl.main_routers.redirect_router import router as redirect_router
 
 # models.Base.metadata.create_all(bind=engine)
 

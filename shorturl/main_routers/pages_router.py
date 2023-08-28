@@ -3,15 +3,15 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
-from ShortURL_app.core.models import models
-from ShortURL_app.core.database.database import get_db
+from shorturl.core.models import models
+from shorturl.core.database.database import get_db
 
 router = APIRouter(
     prefix="",
     tags=["Pages"]
 )
 
-templates = Jinja2Templates(directory="ShortURL_app/core/templates")
+templates = Jinja2Templates(directory="shorturl/core/templates")
 
 
 @router.get("/base", response_class=HTMLResponse)

@@ -19,8 +19,7 @@
                 <a href="http://127.0.0.1:8000/{{ record.short_link }}" target="_blank" class="form-control" id="shortenedURL">
                   http://127.0.0.1:8000/{{ record.short_link }}
                 </a>
-            <button class="btn btn-outline-secondary bg-primary text-white" type="button" id="copyButton" data-clipboard-target="#shortenedURL">Copy URL</button>
-
+                <button class="btn btn-outline-secondary bg-primary text-white" type="button" id="copyButton" data-clipboard-target="#shortenedURL">Copy URL</button>
             </div>
             <p class="card-text"><strong>Long URL:</strong> <a href="{{ record.link }}" target="_blank">{{ record.link }}</a></p>
             <p class="card-text"><strong>ID:</strong> <span>{{ record.id }}</span></p>

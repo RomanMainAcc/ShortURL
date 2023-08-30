@@ -12,16 +12,41 @@
         .extra-bold {
         font-weight: bolder;
         }
+        .display-4 {
+            font-size: 2.5rem;
+            text-align: center;
+        }
+        .btn-signin {
+            font-size: 1.25rem;
+            font-weight: bold;
+            background-color: #007bff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-signin:hover {
+            background-color: #0056b3;
+        }
     </style>
   <title>Short URL</title>
 </head>
 <body>
 <header>
-  <div class="container text-center py-4">
-    <h1 class="text-primary extra-bold">
-      <a href="/" class="text-decoration-none" >Short URL</a>
-    </h1>
-  </div>
+    <nav class="navbar navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand mx-auto text-primary extra-bold display-4" href="/">Short URL</a>
+            <div class="ml-auto">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link btn-signin" href="/login">Sign In</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 </header>
 
 <div id="content">

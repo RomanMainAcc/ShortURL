@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block head %}
+      <style>
+        .user-profile {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .user-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-right: 20px;
+        }
+
+        .user-info {
+            font-size: 18px;
+        }
+
+        .user-username {
+            font-size: 34px;
+            margin: 0;
+        }
+
+        .user-stats {
+            font-size: 12px;
+            margin-top: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+      <div class="container mt-5">
+        <div class="user-profile">
+            <img src="path_to_your_avatar.jpg" alt="User Avatar" class="user-avatar">
+            <div class="user-info">
+                <h1 class="user-username">{{ user.username }}</h1>
+                <p class="user-stats">Total URLs: 10</p>
+                <p class="user-stats">Total Clicks: 200</p>
+            </div>
+        </div>
+
+        <h1 class="mt-5">My Records</h1>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Link</th>
+                        <th>Short Link</th>
+                        <th>Total Clicks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Add your loop here to populate the table rows -->
+                    <tr>
+                        <td><a href="/record/1">1</a></td>
+                        <td>https://example.com/page1</td>
+                        <td>http://localhost/abc123</td>
+                        <td>50</td>
+                    </tr>
+                    <!-- Repeat the above row structure for each record -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

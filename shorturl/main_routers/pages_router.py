@@ -1,3 +1,5 @@
+from typing import Optional
+
 from jwt import encode
 from fastapi import APIRouter, Request, Depends, HTTPException, Form, status
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -26,32 +28,47 @@ templates = Jinja2Templates(directory="shorturl/core/templates")
 
 
 @router.get("/base", response_class=HTMLResponse)
-def get_base_page(request: Request):
-    return templates.TemplateResponse("base.html", {"request": request})
+def get_base_page(request: Request, user: Optional[User] = Depends(fastapi_users.current_user(optional=True))):
+    return templates.TemplateResponse("base.html", {"request": request, "user": user})
 
 
 @router.get("/", response_class=HTMLResponse)
-def get_shortener_page(request: Request):
-    return templates.TemplateResponse("shortener.html", {"request": request})
+def get_shortener_page(
+    request: Request,
+    user: Optional[User] = Depends(fastapi_users.current_user(optional=True))
+):
+    return templates.TemplateResponse("shortener.html", {"request": request, "user": user})
 
 
 @router.get("/records/{short_link}", response_class=HTMLResponse)
-def get_report_page(short_link: str, request: Request, db: Session = Depends(get_db)):
+def get_report_page(
+    short_link: str,
+    request: Request,
+    db: Session = Depends(get_db),
+    user: Optional[User] = Depends(fastapi_users.current_user(optional=True))
+):
     record = db.query(models.LinkTable).filter_by(short_link=short_link).first()
     if not record:
         raise HTTPException(status_code=404, detail="Short link not found")
-    return templates.TemplateResponse("report.html", {"request": request, "record": record})
+    return templates.TemplateResponse("report.html", {"request": request, "record": record, "user": user})
 
 
 @router.get("/records", response_class=HTMLResponse)
-def get_records_page(request: Request, db: Session = Depends(get_db)):
+def get_records_page(
+    request: Request,
+    db: Session = Depends(get_db),
+    user: Optional[User] = Depends(fastapi_users.current_user(optional=True)),
+):
     records = db.query(models.LinkTable).all()
-    return templates.TemplateResponse("records.html", {"request": request, "records": records})
+    return templates.TemplateResponse("records.html", {"request": request, "records": records, "user": user})
 
 
 @router.get("/signup", response_class=HTMLResponse)
-async def registration_form(request: Request):
-    return templates.TemplateResponse("signup.html", {"request": request})
+async def registration_form(
+    request: Request,
+    user: Optional[User] = Depends(fastapi_users.current_user(optional=True)),
+):
+    return templates.TemplateResponse("signup.html", {"request": request, "user": user})
 
 
 @router.post("/signup")
@@ -60,8 +77,10 @@ async def signup_post(
     user_manager: UserManager = Depends(get_user_manager),
     email: EmailStr = Form(),
     password: str = Form(),
+    username: str = Form(),
+    user: Optional[User] = Depends(fastapi_users.current_user(optional=True))
 ):
-    credentials = UserCreate(email=email, password=password)
+    credentials = UserCreate(email=email, password=password, username=username)
     try:
 
         await user_manager.create(credentials)
@@ -73,8 +92,11 @@ async def signup_post(
 
 
 @router.get("/login", response_class=HTMLResponse)
-async def login_form(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request})
+async def login_form(
+    request: Request,
+    user: Optional[User] = Depends(fastapi_users.current_user(optional=True))
+):
+    return templates.TemplateResponse("login.html", {"request": request, "user": user})
 
 
 @router.get("/user/homepage", response_class=HTMLResponse)

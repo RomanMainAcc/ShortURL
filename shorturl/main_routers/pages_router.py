@@ -1,23 +1,18 @@
 from typing import Optional
 
-from jwt import encode
 from fastapi import APIRouter, Request, Depends, HTTPException, Form, status
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
-from fastapi_users import jwt
-from fastapi_users.authentication import CookieTransport, Strategy
 from pydantic import EmailStr
-from sqlalchemy.orm import Session
+from sqlalchemy import select, and_
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from config import SECRET
 from main import fastapi_users
 from shorturl.auth.database import User
-from shorturl.auth.schemas import UserCreate
 from shorturl.auth.manager import UserManager, get_user_manager
+from shorturl.auth.schemas import UserCreate
+from shorturl.core.database.database import get_async_session
 from shorturl.core.models import models
-from shorturl.core.database.database import get_db
-
 
 router = APIRouter(
     prefix="",
@@ -41,25 +36,35 @@ def get_shortener_page(
 
 
 @router.get("/records/{short_link}", response_class=HTMLResponse)
-def get_report_page(
+async def get_report_page(
     short_link: str,
     request: Request,
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_async_session),
     user: Optional[User] = Depends(fastapi_users.current_user(optional=True))
 ):
-    record = db.query(models.LinkTable).filter_by(short_link=short_link).first()
+    # record = db.query(models.LinkTable).filter_by(short_link=short_link).first()
+    result = await db.execute(
+        select(models.LinkTable).where(and_(models.LinkTable.short_link == short_link))
+    )
+    record: models.LinkTable = result.scalar_one_or_none()
+    # mm = result.scalar()
     if not record:
         raise HTTPException(status_code=404, detail="Short link not found")
     return templates.TemplateResponse("report.html", {"request": request, "record": record, "user": user})
 
 
 @router.get("/records", response_class=HTMLResponse)
-def get_records_page(
+async def get_records_page(
     request: Request,
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_async_session),
     user: Optional[User] = Depends(fastapi_users.current_user(optional=True)),
 ):
-    records = db.query(models.LinkTable).all()
+    # records = db.query(models.LinkTable).all()
+    result = await db.execute(
+        select(models.LinkTable)
+    )
+    records: list[models.LinkTable] = result.scalars().all()  # type: Ignore
+
     return templates.TemplateResponse("records.html", {"request": request, "records": records, "user": user})
 
 
@@ -100,8 +105,20 @@ async def login_form(
 
 
 @router.get("/user/homepage", response_class=HTMLResponse)
-def homepage(request: Request, user: User = Depends(fastapi_users.current_user(active=True))):
-    return templates.TemplateResponse("homepage.html", {"request": request, "user": user})
+async def homepage(
+    request: Request,
+    db: AsyncSession = Depends(get_async_session),
+    user: User = Depends(fastapi_users.current_user(active=True))
+):
+    result = await db.execute(
+        select(models.LinkTable).where(and_(models.LinkTable.user_id == user.id))
+    )
+    records: list[models.LinkTable] = result.scalars().all()  # type: Ignore
+    # mm = result.scalar()
+    if not records:
+        raise HTTPException(status_code=404, detail="Short link not found")
+
+    return templates.TemplateResponse("homepage.html", {"request": request, "user": user, "records": records})
 
 # @router.post("/login", response_class=HTMLResponse)
 # async def login_post(

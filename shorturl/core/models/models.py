@@ -13,7 +13,7 @@ from shorturl.core.database.database import Base
 # #     pass
 #
 
-metadata = Base.metadata
+# metadata = Base.metadata
 
 
 class LinkTable(Base):

@@ -1,9 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import RedirectResponse
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 
 from shorturl.core.models import models
-from shorturl.core.database.database import get_db
+from shorturl.core.database.database import get_async_session
+import asyncio
+from sqlalchemy import select, and_
+
 
 router = APIRouter(
     prefix="",
@@ -12,12 +16,15 @@ router = APIRouter(
 
 
 @router.get("/{short_link}")
-def redirect(short_link: str, db: Session = Depends(get_db)):
-    record = db.query(models.LinkTable).filter_by(short_link=short_link).first()
-
+async def redirect(short_link: str, db: AsyncSession = Depends(get_async_session)):
+    statement = select(models.LinkTable).where(and_(models.LinkTable.short_link == short_link))
+    result = await db.execute(
+        statement
+    )
+    record: models.LinkTable = result.scalar_one_or_none()
     if record:
         record.total_clicks += 1
-        db.commit()
+        await db.commit()
         return RedirectResponse(url=record.link)
     else:
         raise HTTPException(status_code=404, detail="Short link not found")

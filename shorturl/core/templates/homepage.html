@@ -55,12 +55,14 @@
                 </thead>
                 <tbody>
                     <!-- Add your loop here to populate the table rows -->
-                    <tr>
-                        <td><a href="/record/1">1</a></td>
-                        <td>https://example.com/page1</td>
-                        <td>http://localhost/abc123</td>
-                        <td>50</td>
-                    </tr>
+                    {% for record in records %}
+                      <tr>
+                        <td><a href="{{ url_for('get_report_page', short_link=record.short_link) }}" target="_blank">{{ record.id }}</a></td>
+                        <td class="text-break"><a href="{{ record.link }}" target="_blank">{{ record.link }}</a></td>
+                        <td><a href="/{{ record.short_link }}" target="_blank">http://127.0.0.1:8000/{{ record.short_link }}</a></td>
+                        <td>{{ record.total_clicks }}</td>
+                      </tr>
+                    {% endfor %}
                     <!-- Repeat the above row structure for each record -->
                 </tbody>
             </table>

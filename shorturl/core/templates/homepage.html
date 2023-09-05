@@ -34,11 +34,11 @@
 {% block content %}
       <div class="container mt-5">
         <div class="user-profile">
-            <img src="path_to_your_avatar.jpg" alt="User Avatar" class="user-avatar">
+            <img src="{{ url_for('static', path='/homepage_button.png') }}" alt="User Avatar" class="user-avatar">
             <div class="user-info">
                 <h1 class="user-username">{{ user.username }}</h1>
-                <p class="user-stats">Total URLs: 10</p>
-                <p class="user-stats">Total Clicks: 200</p>
+                <p class="user-stats">Total URLs: {{ total_urls_user }}</p>
+                <p class="user-stats">Total Clicks: {{ total_clicks_user }}</p>
             </div>
         </div>
 
@@ -50,7 +50,7 @@
                         <th>ID</th>
                         <th>Link</th>
                         <th>Short Link</th>
-                        <th>Total Clicks</th>
+                        <th>Total URL Clicks</th>
                     </tr>
                 </thead>
                 <tbody>

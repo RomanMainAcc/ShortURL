@@ -4,7 +4,7 @@ from fastapi import APIRouter, Request, Depends, HTTPException, Form, status
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import EmailStr
-from sqlalchemy import select, and_
+from sqlalchemy import select, and_, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from main import fastapi_users
@@ -114,11 +114,32 @@ async def homepage(
         select(models.LinkTable).where(and_(models.LinkTable.user_id == user.id))
     )
     records: list[models.LinkTable] = result.scalars().all()  # type: Ignore
-    # mm = result.scalar()
+
+    response = await db.execute(
+        select(func.sum(models.LinkTable.total_clicks)).where(models.LinkTable.user_id == user.id)
+    )
+
+    total_clicks_user = response.scalar_one_or_none() or 0
+
+    response = await db.execute(
+        select(func.count(models.LinkTable.id)).where(models.LinkTable.user_id == user.id)
+    )
+
+    total_urls_user = response.scalar_one_or_none() or 0
+
     if not records:
         raise HTTPException(status_code=404, detail="Short link not found")
 
-    return templates.TemplateResponse("homepage.html", {"request": request, "user": user, "records": records})
+    return templates.TemplateResponse(
+        "homepage.html",
+        {
+            "request": request,
+            "user": user,
+            "records": records,
+            "total_clicks_user": total_clicks_user,
+            "total_urls_user": total_urls_user,
+         }
+    )
 
 # @router.post("/login", response_class=HTMLResponse)
 # async def login_post(

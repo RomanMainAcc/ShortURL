@@ -4,7 +4,7 @@ from fastapi import APIRouter, Request, Depends, HTTPException, Form, status
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import EmailStr
-from sqlalchemy import select, and_, func
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from main import fastapi_users
@@ -44,7 +44,7 @@ async def get_report_page(
 ):
     # record = db.query(models.LinkTable).filter_by(short_link=short_link).first()
     result = await db.execute(
-        select(models.LinkTable).where(and_(models.LinkTable.short_link == short_link))
+        select(models.LinkTable).where(models.LinkTable.short_link == short_link)  # type: Ignore
     )
     record: models.LinkTable = result.scalar_one_or_none()
     # mm = result.scalar()
@@ -111,7 +111,7 @@ async def homepage(
     user: User = Depends(fastapi_users.current_user(active=True))
 ):
     result = await db.execute(
-        select(models.LinkTable).where(and_(models.LinkTable.user_id == user.id))
+        select(models.LinkTable).where(models.LinkTable.user_id == user.id)
     )
     records: list[models.LinkTable] = result.scalars().all()  # type: Ignore
 
@@ -140,82 +140,3 @@ async def homepage(
             "total_urls_user": total_urls_user,
          }
     )
-
-# @router.post("/login", response_class=HTMLResponse)
-# async def login_post(
-#     request: Request,
-#     user_manager: UserManager = Depends(get_user_manager),
-#     email: EmailStr = Form(),
-#     password: str = Form(),
-# ):
-#     form_data = OAuth2PasswordRequestForm(username=email, password=password)
-#     try:
-#
-#         user = await user_manager.authenticate(form_data)
-#
-#         jwt_content = {"sub": str(user.id)}
-#         jwt_token = encode(jwt_content, SECRET, algorithm="HS256")
-#
-#         response = templates.TemplateResponse("shortener.html", {"request": request})
-#         response.set_cookie(key="access_token", value=jwt_token, httponly=True, secure=False)
-#         return response
-#
-#     except Exception:
-#         raise HTTPException(status_code=400, detail="Invalid credentials")
-
-# @router.post(
-#         "/login",
-#         name=f"auth:{backend.name}.login",
-#         responses=login_responses,
-#     )
-#     async def login(
-#         request: Request,
-#         user_manager: UserManager = Depends(get_user_manager),
-#         email: EmailStr = Form(),
-#         password: str = Form(),
-#         strategy: Strategy[models.UP, models.ID] = Depends(auth_backend.get_strategy),
-#     ):
-#         credentials = UserCreate(email=email, password=password)
-#         user = await user_manager.authenticate(credentials)
-#
-#         if user is None or not user.is_active:
-#             raise HTTPException(
-#                 status_code=status.HTTP_400_BAD_REQUEST,
-#                 detail=ErrorCode.LOGIN_BAD_CREDENTIALS,
-#             )
-#         if requires_verification and not user.is_verified:
-#             raise HTTPException(
-#                 status_code=status.HTTP_400_BAD_REQUEST,
-#                 detail=ErrorCode.LOGIN_USER_NOT_VERIFIED,
-#             )
-#         response = await backend.login(strategy, user)
-#         await user_manager.on_after_login(user, request, response)
-#         return response
-
-
-# @router.post(
-#         "/login",
-#         name=f"auth:{backend.name}.login",
-#         responses=login_responses,
-#     )
-#     async def login(
-#         request: Request,
-#         credentials: OAuth2PasswordRequestForm = Depends(),
-#         user_manager: BaseUserManager[models.UP, models.ID] = Depends(get_user_manager),
-#         strategy: Strategy[models.UP, models.ID] = Depends(backend.get_strategy),
-#     ):
-#         user = await user_manager.authenticate(credentials)
-#
-#         if user is None or not user.is_active:
-#             raise HTTPException(
-#                 status_code=status.HTTP_400_BAD_REQUEST,
-#                 detail=ErrorCode.LOGIN_BAD_CREDENTIALS,
-#             )
-#         if requires_verification and not user.is_verified:
-#             raise HTTPException(
-#                 status_code=status.HTTP_400_BAD_REQUEST,
-#                 detail=ErrorCode.LOGIN_USER_NOT_VERIFIED,
-#             )
-#         response = await backend.login(strategy, user)
-#         await user_manager.on_after_login(user, request, response)
-#         return response

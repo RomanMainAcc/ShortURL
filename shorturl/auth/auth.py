@@ -1,10 +1,11 @@
 import uuid
 
+from fastapi import status, Response
+from fastapi.responses import RedirectResponse
 from fastapi_users import FastAPIUsers
 from fastapi_users.authentication import CookieTransport, AuthenticationBackend
-from fastapi.responses import RedirectResponse
-from fastapi import status, Response
 from fastapi_users.authentication import JWTStrategy
+
 from config import SECRET
 from shorturl.auth.database import User
 from shorturl.auth.manager import get_user_manager

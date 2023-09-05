@@ -1,13 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import RedirectResponse
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import Session
-
-from shorturl.core.models import models
-from shorturl.core.database.database import get_async_session
-import asyncio
 from sqlalchemy import select, and_
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from shorturl.core.database.database import get_async_session
+from shorturl.core.models import models
 
 router = APIRouter(
     prefix="",

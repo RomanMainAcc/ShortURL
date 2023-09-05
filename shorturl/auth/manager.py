@@ -4,12 +4,8 @@ from typing import Optional
 from fastapi import Depends, Request
 from fastapi_users import BaseUserManager, UUIDIDMixin
 
-from shorturl.auth.database import User, get_user_db
-
 from config import SECRET
-
-
-SECRET = SECRET
+from shorturl.auth.database import User, get_user_db
 
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):

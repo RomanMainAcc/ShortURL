@@ -4,13 +4,12 @@ import shortuuid
 from fastapi import APIRouter, Depends
 from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import Session
 
 from shorturl.auth.auth import fastapi_users
 from shorturl.auth.database import User
+from shorturl.core.database.database import get_async_session
 from shorturl.core.models import models
 from shorturl.core.schemas.link_schemas import Link
-from shorturl.core.database.database import get_async_session
 
 router = APIRouter(
     prefix="/api",
@@ -25,7 +24,6 @@ async def create_short_link(
     user: Optional[User] = Depends(fastapi_users.current_user(optional=True)),
 ):
     link_str = str(link.link)
-    # record = db.query(models.LinkTable).filter_by(link=link_str).first()
     result = await db.execute(
         select(models.LinkTable).where(and_(models.LinkTable.link == link_str))
     )

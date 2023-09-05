@@ -1,15 +1,11 @@
-import uuid
-
 from fastapi import FastAPI
-from fastapi_users import FastAPIUsers
 from fastapi.staticfiles import StaticFiles
+
 from shorturl.auth.auth import auth_backend, fastapi_users
-from shorturl.auth.database import User
-from shorturl.auth.manager import get_user_manager
 from shorturl.auth.schemas import UserRead, UserCreate
 from shorturl.main_routers.pages_router import router as router_pages
-from shorturl.rest_api_routers.link_routes import router as router_api
 from shorturl.main_routers.redirect_router import router as redirect_router
+from shorturl.rest_api_routers.link_routes import router as router_api
 
 # models.Base.metadata.create_all(bind=engine)
 

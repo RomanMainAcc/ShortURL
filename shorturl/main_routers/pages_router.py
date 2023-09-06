@@ -47,7 +47,6 @@ async def get_report_page(
         select(models.LinkTable).where(models.LinkTable.short_link == short_link)  # type: Ignore
     )
     record: models.LinkTable = result.scalar_one_or_none()
-    # mm = result.scalar()
     if not record:
         raise HTTPException(status_code=404, detail="Short link not found")
     return templates.TemplateResponse("report.html", {"request": request, "record": record, "user": user})

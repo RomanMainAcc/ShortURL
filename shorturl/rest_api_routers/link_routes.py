@@ -2,7 +2,7 @@ from typing import Optional
 
 import shortuuid
 from fastapi import APIRouter, Depends
-from sqlalchemy import and_, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from shorturl.auth.auth import fastapi_users
@@ -19,13 +19,13 @@ router = APIRouter(
 
 @router.post("/create-short-link", response_model=str)
 async def create_short_link(
-    link: Link,
-    db: AsyncSession = Depends(get_async_session),
-    user: Optional[User] = Depends(fastapi_users.current_user(optional=True)),
+        link: Link,
+        db: AsyncSession = Depends(get_async_session),
+        user: Optional[User] = Depends(fastapi_users.current_user(optional=True)),
 ):
     link_str = str(link.link)
     result = await db.execute(
-        select(models.LinkTable).where(and_(models.LinkTable.link == link_str))
+        select(models.LinkTable).where(models.LinkTable.link == link_str)  # type: ignore
     )
     record = result.scalar_one_or_none()
 

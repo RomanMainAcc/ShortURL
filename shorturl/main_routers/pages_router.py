@@ -126,9 +126,6 @@ async def homepage(
 
     total_urls_user = response.scalar_one_or_none() or 0
 
-    if not records:
-        raise HTTPException(status_code=404, detail="Short link not found")
-
     return templates.TemplateResponse(
         "homepage.html",
         {

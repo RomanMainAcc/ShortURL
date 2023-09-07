@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import RedirectResponse
-from sqlalchemy import select, and_
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from shorturl.core.database.database import get_async_session
@@ -14,7 +14,7 @@ router = APIRouter(
 
 @router.get("/{short_link}")
 async def redirect(short_link: str, db: AsyncSession = Depends(get_async_session)):
-    statement = select(models.LinkTable).where(and_(models.LinkTable.short_link == short_link))
+    statement = select(models.LinkTable).where(models.LinkTable.short_link == short_link)  # type: ignore
     result = await db.execute(
         statement
     )

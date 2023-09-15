@@ -9,7 +9,7 @@ STATIC_DIR = ROOT_DIR / 'static'
 DEV_ENV_FILEPATH = ROOT_DIR / '.env'
 TEST_ENV_FILEPATH = ROOT_DIR / '.test.env'
 
-ENV = os.environ.get('ENV')
+ENV = os.environ.get('ENV', 'dev')
 
 if ENV == 'dev':
     load_dotenv(DEV_ENV_FILEPATH)

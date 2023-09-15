@@ -1,19 +1,20 @@
 """init
 
-Revision ID: fab5ad96d213
+Revision ID: ba9146c98e1b
 Revises: 
-Create Date: 2023-09-03 18:49:04.895951
+Create Date: 2023-09-15 20:54:59.306056
 
 """
 from typing import Sequence, Union
 
-import fastapi_users_db_sqlalchemy
 from alembic import op
 import sqlalchemy as sa
 
 
+import fastapi_users_db_sqlalchemy
+
 # revision identifiers, used by Alembic.
-revision: str = 'fab5ad96d213'
+revision: str = 'ba9146c98e1b'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None

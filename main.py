@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
+from config import STATIC_DIR
 from shorturl.auth.auth import auth_backend, fastapi_users
 from shorturl.auth.schemas import UserRead, UserCreate
 from shorturl.main_routers.pages_router import router as router_pages
@@ -13,7 +14,7 @@ app = FastAPI(
     title="Short URL"
 )
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 app.include_router(router_pages)
 app.include_router(router_api)

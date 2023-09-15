@@ -2,3 +2,6 @@ test-main.http
 .env
 venv
 .idea
+.env-non-dev
+.env-render
+.test.env

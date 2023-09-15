@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+      {% block head %}{%  endblock %}
+    <style>
+        .extra-bold {
+        font-weight: bolder;
+        }
+        .display-4 {
+            font-size: 2.5rem;
+            text-align: center;
+        }
+        .btn-signin {
+            font-size: 1.25rem;
+            font-weight: bold;
+            background-color: #007bff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-signin:hover {
+            background-color: #0056b3;
+        }
+    </style>
+  <title>Short URL</title>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand mx-auto text-primary extra-bold display-4" href="/">Short URL</a>
+
+            {% if user %}
+               <div class="ml-auto">
+                  <ul class="navbar-nav mx-3">
+                      <li class="nav-item">
+                          <a class="nav-link" href="/user/homepage">
+                              <img
+                                  src="{{ url_for('static', path='/homepage_button.png') }}"
+                                  alt="Homepage"
+                                  class="nav-icon"
+                                  width="35"
+                                  height="35"
+                              >
+                          </a>
+                      </li>
+                  </ul>
+              </div>
+              <form method="post" action="/auth/jwt/logout">
+                 <button type="submit" class="btn btn-danger">Logout</button>
+              </form>
+
+
+            {% else %}
+              <div class="ml-auto">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link btn-signin" href="/login">Sign In</a>
+                    </li>
+                </ul>
+              </div>
+            {% endif %}
+        </div>
+    </nav>
+</header>
+
+<div id="content">
+  {% block content %}{%  endblock %}
+</div>
+
+</body>
+</html>

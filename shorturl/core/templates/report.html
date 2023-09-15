@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block head %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      new ClipboardJS('#copyButton');
+    });
+  </script>
+{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            Shortened URL
+        </div>
+        <div class="card-body">
+            <div class="input-group mb-3">
+                <a href="http://127.0.0.1:8000/{{ record.short_link }}" target="_blank" class="form-control" id="shortenedURL">
+                  http://127.0.0.1:8000/{{ record.short_link }}
+                </a>
+                <button class="btn btn-outline-secondary bg-primary text-white" type="button" id="copyButton" data-clipboard-target="#shortenedURL">Copy URL</button>
+            </div>
+            <p class="card-text"><strong>Long URL:</strong> <a href="{{ record.link }}" target="_blank">{{ record.link }}</a></p>
+            <p class="card-text"><strong>ID:</strong> <span>{{ record.id }}</span></p>
+            <p class="card-text"><strong>Total clicks:</strong> <span>{{ record.total_clicks }}</span></p>
+            <p class="card-text"><strong>Creation date:</strong> <span>{{ record.creation_date }}</span></p>
+            <a class="btn btn-primary" href="/" role="button">Shorten another URL</a>
+            <a class="btn btn-secondary" href="/records/">Show all records</a>
+        </div>
+    </div>
+  </div>
+{% endblock %}

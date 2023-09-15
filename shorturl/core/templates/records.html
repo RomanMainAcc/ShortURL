@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <title>Records</title>
+{% endblock %}
+
+{% block content %}
+    <div style="background-color: #f8f9fa; padding-bottom: 20px;">
+      <div class="container" >
+          <h1 class="mb-4">Records</h1>
+          <div class="table-responsive" style="max-height: 70vh;">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Link</th>
+                        <th>Short Link</th>
+                        <th>Total URL Clicks</th>
+                        <th>Created by</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in records %}
+                      <tr>
+{#                        <td><a href="/records/{{ record.short_link }}" target="_blank">{{ record.id }}</a></td>#}
+                        <td><a href="{{ url_for('get_report_page', short_link=record.short_link) }}" target="_blank">{{ record.id }}</a></td>
+                        <td class="text-break"><a href="{{ record.link }}" target="_blank">{{ record.link }}</a></td>
+                        <td><a href="/{{ record.short_link }}" target="_blank">http://127.0.0.1:8000/{{ record.short_link }}</a></td>
+                        <td>{{ record.total_clicks }}</td>
+                        <td>{{ record.user_id }}</td>
+                      </tr>
+                    {% endfor %}
+              </tbody>
+            </table>
+          </div>
+      </div>
+    </div>
+{% endblock %}

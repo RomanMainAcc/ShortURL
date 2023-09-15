@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block head %}
+      <style>
+        .user-profile {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .user-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-right: 20px;
+        }
+
+        .user-info {
+            font-size: 18px;
+        }
+
+        .user-username {
+            font-size: 34px;
+            margin: 0;
+        }
+
+        .user-stats {
+            font-size: 12px;
+            margin-top: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+      <div class="container mt-5">
+        <div class="user-profile">
+            <img src="{{ url_for('static', path='/homepage_button.png') }}" alt="User Avatar" class="user-avatar">
+            <div class="user-info">
+                <h1 class="user-username">{{ user.username }}</h1>
+                <p class="user-stats">Total URLs: {{ total_urls_user }}</p>
+                <p class="user-stats">Total Clicks: {{ total_clicks_user }}</p>
+            </div>
+        </div>
+
+        <h1 class="mt-5">My Records</h1>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Link</th>
+                        <th>Short Link</th>
+                        <th>Total URL Clicks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Add your loop here to populate the table rows -->
+                    {% for record in records %}
+                      <tr>
+                        <td><a href="{{ url_for('get_report_page', short_link=record.short_link) }}" target="_blank">{{ record.id }}</a></td>
+                        <td class="text-break"><a href="{{ record.link }}" target="_blank">{{ record.link }}</a></td>
+                        <td><a href="/{{ record.short_link }}" target="_blank">http://127.0.0.1:8000/{{ record.short_link }}</a></td>
+                        <td>{{ record.total_clicks }}</td>
+                      </tr>
+                    {% endfor %}
+                    <!-- Repeat the above row structure for each record -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

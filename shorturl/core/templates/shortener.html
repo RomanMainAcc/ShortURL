@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block head %}
+  <script>
+    const shortenerURL = async () => {
+      const searchInputValue = document.getElementById("create_short_url").value;
+      try {
+        const response = await fetch(
+          '/api/create-short-link',
+          {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ link: searchInputValue })
+          }
+        );
+
+        if (response.ok) {
+    const shortLink = await response.text();
+    const cleanedShortLink = encodeURIComponent(shortLink.slice(1, -1));
+    const reportURL = `records/${cleanedShortLink}`;
+    window.location.href = reportURL;
+}else {
+    const errorData = await response.json();  // Parse error response as JSON
+    let errorMessage = errorData.error;       // Get the error message
+    if (!errorMessage) {
+        errorMessage = "This object may not be processable. For example, https://example.com/";
+    }
+    document.getElementById("error-message").innerText = errorMessage;  // Set the error message in the element
+}
+      } catch (error) {
+        console.error('Error creating short link:', error);
+      }
+    }
+  </script>
+{%  endblock %}
+
+{% block content %}
+  <div class="d-flex justify-content-center mt-5">
+    <div class="card p-4">
+      <h2 class="text-center mb-4">Paste the URL to be shortened</h2>
+      <div class="mb-3">
+        <input id="create_short_url" type="text" class="form-control" placeholder="Enter URL">
+      </div>
+      <button onclick="shortenerURL()" class="btn btn-primary btn-block">Shorten URL</button>
+      <a class="btn btn-secondary mt-2" href="/records/">Show all records</a>
+      <p id="error-message" class="text-danger mt-2"></p>
+    </div>
+  </div>
+{%  endblock %}

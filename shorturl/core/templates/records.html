@@ -25,7 +25,7 @@
 {#                        <td><a href="/records/{{ record.short_link }}" target="_blank">{{ record.id }}</a></td>#}
                         <td><a href="{{ url_for('get_report_page', short_link=record.short_link) }}" target="_blank">{{ record.id }}</a></td>
                         <td class="text-break"><a href="{{ record.link }}" target="_blank">{{ record.link }}</a></td>
-                        <td><a href="/{{ record.short_link }}" target="_blank">http://127.0.0.1:8000/{{ record.short_link }}</a></td>
+                        <td><a href="/{{ record.short_link }}" target="_blank">https://{{ request.url.hostname }}/{{ record.short_link }}</a></td>
                         <td>{{ record.total_clicks }}</td>
                         <td>{{ record.user_id }}</td>
                       </tr>
